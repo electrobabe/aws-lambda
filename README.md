@@ -7,6 +7,6 @@ http://console.aws.amazon.com/lambda
 
 - create JAR package with
 
-    mvn package
+`mvn package`
 
 - create lambda function in AWS with jar and Handler "at.electrobabe.lambda.HelloRequestHandler"
