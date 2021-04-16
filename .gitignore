@@ -1,2 +1,6 @@
-.idea
-lambda.iml
+/.idea/
+*.iml
+
+/target/
+
+/src/test/resources/calendarUtilsTest.properties
