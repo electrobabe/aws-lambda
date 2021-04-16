@@ -94,24 +94,28 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
     public APIGatewayV2ProxyResponseEvent handleRequest(APIGatewayV2ProxyRequestEvent event, Context context) {
         log.info("event {}", gson.toJson(event));
         log.info("CONTEXT: {}", gson.toJson(context));
-        String debug = "event: " + gson.toJson(event) + ", \ncontext: " + gson.toJson(context);
 
-        if (event.getQueryStringParameters() != null &&
-                event.getQueryStringParameters().containsKey(PARAM_WEBCAL_URL) && event.getQueryStringParameters().containsKey(PARAM_DATE)) {
+        String debug = "";
+        if (event == null || event.getQueryStringParameters() == null) {
+            String noParamsMsg = "Please enter an ICS / Webcal URL and pick a date";
+            return response(noParamsMsg, HttpURLConnection.HTTP_NOT_ACCEPTABLE, debug);
 
+        } else if (event.getQueryStringParameters().containsKey(PARAM_DEBUG)) {
+            debug = "event: " + gson.toJson(event) + ", \ncontext: " + gson.toJson(context);
+            log.info("debug: {}", debug);
+        }
+
+        if (event.getQueryStringParameters().containsKey(PARAM_WEBCAL_URL) && event.getQueryStringParameters().containsKey(PARAM_DATE)) {
             String text = getEvents(event, debug);
 
-            if (!event.getQueryStringParameters().containsKey(PARAM_DEBUG)) {
-                log.info("debug: {}", debug);
-                debug = "";
-            }
             return response(text, HttpURLConnection.HTTP_ACCEPTED, debug);
 
         } else {
-            String noParamsMsg = "Please enter ICS / Webcal URL and pick a date";
+            String noParamsMsg = "Please enter an ICS / Webcal URL and pick a date";
             return response(noParamsMsg, HttpURLConnection.HTTP_NOT_ACCEPTABLE, debug);
         }
     }
+
 
     private String getEvents(APIGatewayV2ProxyRequestEvent req, String debug) {
         String webcalUrl = req.getQueryStringParameters().get(PARAM_WEBCAL_URL);

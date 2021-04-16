@@ -1,9 +1,10 @@
 # Electrobabe's Utils - Calendar Utils
 
+You are here: https://github.com/electrobabe/aws-lambda
+
 * Author: barbara ondrisek
 * Website: https://electrobabe.at
 * Contact: Don't contact me, I'll contact you! :P
-
 
 ## Description
 
@@ -14,8 +15,8 @@ Usage:
 * Enter Date: formal yyyy-MM-dd
 * Returns a list of events with:
   * Duration, e.g. 0h 30m
-  * Event name: e.g. "Daily Standup"
-  * Type: e.g. (BUSY)
+  * Event name: e.g. "Daily Stand-up"
+  * Type: e.g. BUSY, TENTATIVE, OOF (out of office)
 
 
 ## Tech Stack
@@ -146,8 +147,7 @@ region = [AWS_REGION]
 + check logs: "Execution failed due to configuration error: Malformed Lambda proxy response. Method completed with status: 502"
 -> https://aws.amazon.com/de/premiumsupport/knowledge-center/malformed-502-api-gateway/
 
-
-# House Keeping
+# Housekeeping
 
 ## Maven Dependency Cleanup
 
@@ -169,6 +169,3 @@ Info:
 - Used undeclared dependencies are those which are required, but have not been explicitly declared as dependencies in your project. They are however available thanks to transitive dependency of other dependencies in your project. It is a good idea to explicitly declare these dependencies. This also allows you to control the version of these dependencies (perhaps matching the version provided by your runtime).
 - As for unused declared dependencies, it is a good idea to remove them. Why add unnecessary dependency to your project? But then transitivity can bring these in anyway, perhaps, conflicting with your runtime versions. In this case, you will need to specify them — essentially to control the version.
 - By the way, mvn dependency:tree gives the dependency tree of the project, which gives you a better perspective of how each dependency fits in in your project.
-- look for mismatches in your dependencyManagement section.
-
-    mvn dependency:analyze-dep-mgt 
