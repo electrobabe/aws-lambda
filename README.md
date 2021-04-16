@@ -13,9 +13,9 @@ Usage:
 * Enter ICS / Webcal file, e.g. https://outlook.office365.com/owa/calendar/123/calendar.ics
 * Enter Date: formal yyyy-MM-dd
 * Returns a list of events with:
-  * Duration
-  * Event name
-  * Type
+  * Duration, e.g. 0h 30m
+  * Event name: e.g. "Daily Standup"
+  * Type: e.g. (BUSY)
 
 
 ## Tech Stack
