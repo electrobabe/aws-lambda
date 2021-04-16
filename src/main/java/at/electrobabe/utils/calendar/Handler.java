@@ -4,8 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyResponseEvent;
-import com.amazonaws.services.lambda.runtime.events.SQSEvent;
-import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -66,28 +64,6 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
         } catch (Exception e) {
             log.warn("error setting up handler", e);
         }
-    }
-
-    /**
-     * @param event   SQSEvent input
-     * @param context Context
-     * @return output json string
-     */
-    String handleRequest(SQSEvent event, Context context) {
-        String response = "{" +
-                "\"isBase64Encoded\": false," +
-                "\"statusCode\": 200," +
-                "\"headers\": { \"myHeader\": \"myHeaderValue\"}," +
-                "\"body\": " + BODY_PLACEHOLDER +
-                "}";
-
-        String test = test(event, context);
-        log.info("test: {}", test);
-        String ret = response.replace(BODY_PLACEHOLDER, test);
-        log.info("ret: {}", ret);
-
-        log.info("response: {}", response);
-        return response;
     }
 
     @Override
@@ -171,45 +147,5 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
             log.error("cannot read template", e);
         }
         return template;
-    }
-
-    private String test(SQSEvent event, Context context) {
-        String response = "";
-        try {
-            log.info("EVENT: {}", gson.toJson(event));
-
-            // log execution details
-            log.info("ENVIRONMENT VARIABLES: {}", gson.toJson(System.getenv()));
-            log.info("CONTEXT: {}", gson.toJson(context));
-
-            // process event
-            if (event != null && event.getRecords() != null) {
-                for (SQSMessage msg : event.getRecords()) {
-                    if (msg != null) {
-                        log.info(msg.getBody());
-                    } else {
-                        log.warn("msg is null");
-                    }
-                }
-            } else {
-                log.warn("event is null {} ", event);
-            }
-
-            // call Lambda API
-
-            // process Lambda API response
-            CompletableFuture<GetAccountSettingsResponse> accountSettings = lambdaClient.getAccountSettings(GetAccountSettingsRequest.builder().build());
-            log.info("Getting account settings {}", accountSettings);
-
-            if (accountSettings != null) {
-                GetAccountSettingsResponse settings = accountSettings.get();
-                response = gson.toJson(settings.accountUsage());
-                log.info("Account usage: {}", response);
-            }
-
-        } catch (Exception e) {
-            log.error("error handling request", e);
-        }
-        return response;
     }
 }
