@@ -18,22 +18,24 @@ Usage:
   * Event name: e.g. "Daily Stand-up"
   * Type: e.g. BUSY, TENTATIVE, OOF (out of office)
 
-
 ## Tech Stack
 
 - FE: plain HTML, not even CSS ;)
 - BE Language: Java 11
 - Hosting: BE on AWS Lambda
 
+## Deploy
 
-## AWS Setup How To
+    mvn clean install
+
+-> deploy to AWS Lambda function
+
+## AWS Lambda Setup How To
 
 (!) Disclaimer: Might be outdated
 
-
 AWS setup steps:
 https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-lambda.html
-
 
 ### 1. create lambda function
 
@@ -166,6 +168,13 @@ region = [AWS_REGION]
 Info:
 
 - Dependencies with runtime or provided scope will flag up as "Unused declared" unless you use the ignoreNonCompile flag when analysing dependencies
-- Used undeclared dependencies are those which are required, but have not been explicitly declared as dependencies in your project. They are however available thanks to transitive dependency of other dependencies in your project. It is a good idea to explicitly declare these dependencies. This also allows you to control the version of these dependencies (perhaps matching the version provided by your runtime).
-- As for unused declared dependencies, it is a good idea to remove them. Why add unnecessary dependency to your project? But then transitivity can bring these in anyway, perhaps, conflicting with your runtime versions. In this case, you will need to specify them — essentially to control the version.
+- Used undeclared dependencies are those which are required, but have not been explicitly declared as dependencies in your project. They are however available thanks to transitive dependency of other
+  dependencies in your project. It is a good idea to explicitly declare these dependencies. This also allows you to control the version of these dependencies (perhaps matching the version provided by
+  your runtime).
+- As for unused declared dependencies, it is a good idea to remove them. Why add unnecessary dependency to your project? But then transitivity can bring these in anyway, perhaps, conflicting with your
+  runtime versions. In this case, you will need to specify them — essentially to control the version.
 - By the way, mvn dependency:tree gives the dependency tree of the project, which gives you a better perspective of how each dependency fits in in your project.
+
+# TODOs
+
+- implement basic captcha https://allwebco-templates.com/support/script-simple-captcha.htm
