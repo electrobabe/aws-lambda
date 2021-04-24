@@ -6,7 +6,7 @@
 
     <groupId>at.electrobabe.utils</groupId>
     <artifactId>calendar</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <name>Calendar Utils</name>
 
     <properties>
