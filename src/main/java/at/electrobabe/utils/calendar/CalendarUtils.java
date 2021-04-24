@@ -98,7 +98,7 @@ public class CalendarUtils {
             log.debug("single event added: {}", event.getSummary().getValue());
 
         } else if (event.getSequence() != null) {
-            addOccurence(dateStr, list, date, event);
+            addOccurrence(dateStr, list, date, event);
         }
     }
 
@@ -106,9 +106,9 @@ public class CalendarUtils {
         return list.stream().anyMatch(o -> o.getSummary().getValue().equals(event.getSummary().getValue()));
     }
 
-    private static void addOccurence(String dateStr, List<VEvent> list, Date date, VEvent event) {
+    private static void addOccurrence(String dateStr, List<VEvent> list, Date date, VEvent event) {
         try {
-            // fixes: VEvent occurence = event.getOccurrence(date);
+            // fixes: VEvent occurrence = event.getOccurrence(date);
             PeriodList periods = event.getConsumedTime(date, new Date(date.getTime() + ONE_DAY_IN_MILLIS));
 
             for (final Period p : periods) {
@@ -138,19 +138,10 @@ public class CalendarUtils {
      */
     private static String printEvent(VEvent event) {
         String outOfOffice = event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS") != null ? event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS").getValue() : "";
-        String text = String.format("%s  %s  (%s)", getDurationAsString(event), event.getSummary().getValue(), outOfOffice);
+        String text = String.format("%s - %s - (%s)", getDurationAsString(event), event.getSummary().getValue(), outOfOffice);
         log.info(text);
 
         return text;
-    }
-
-    private static void printEvent(VEvent event, boolean printOutOfOffice) {
-        String outOfOffice = event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS") != null ? event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS").getValue() : "";
-        if (printOutOfOffice) {
-            log.info("event: {} '{}' ({})", getDurationAsString(event), event.getSummary().getValue(), outOfOffice);
-        } else if (!outOfOffice.equals("OOF")) {
-            log.info("event: {} '{}'", getDurationAsString(event), event.getSummary().getValue());
-        }
     }
 
     private static long getDuration(VEvent event) {
