@@ -102,10 +102,13 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
 
         String events = "no events found!";
         try {
+            log.debug("getting events as list");
             String eventsAsList = CalendarUtils.getCalendarEntriesForDay(date, webcalUrl);
 
+            log.debug("eventsAsList: {}", eventsAsList);
+
             events = Arrays.stream(eventsAsList.split("\n")).map(s -> "<li>" + s + "</li>").collect(Collectors.joining("", "<ol>", "</ol>"));
-            log.info("---formattedEvents {}", events);
+            log.debug("formattedEvents {}", events);
 
         } catch (Exception e) {
             log.error("error getting events", e);
