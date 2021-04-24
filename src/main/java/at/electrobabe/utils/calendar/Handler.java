@@ -2,8 +2,8 @@ package at.electrobabe.utils.calendar;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyResponseEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * https://calenderutils.electrobabe.at/
  */
 @Slf4j
-public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, APIGatewayV2ProxyResponseEvent> {
+public class Handler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGatewayV2WebSocketResponse> {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final LambdaAsyncClient lambdaClient = LambdaAsyncClient.create();
@@ -67,9 +67,9 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
     }
 
     @Override
-    public APIGatewayV2ProxyResponseEvent handleRequest(APIGatewayV2ProxyRequestEvent event, Context context) {
-        log.info("event {}", gson.toJson(event));
-        log.info("CONTEXT: {}", gson.toJson(context));
+    public APIGatewayV2WebSocketResponse handleRequest(APIGatewayV2WebSocketEvent event, Context context) {
+        log.debug("event {}", gson.toJson(event));
+        log.debug("context: {}", gson.toJson(context));
 
         String debug = "";
         if (event == null || event.getQueryStringParameters() == null) {
@@ -93,7 +93,7 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
     }
 
 
-    private String getEvents(APIGatewayV2ProxyRequestEvent req, String debug) {
+    private String getEvents(APIGatewayV2WebSocketEvent req, String debug) {
         String webcalUrl = req.getQueryStringParameters().get(PARAM_WEBCAL_URL);
         log.info("webcalUrl: {}", webcalUrl);
 
@@ -122,8 +122,8 @@ public class Handler implements RequestHandler<APIGatewayV2ProxyRequestEvent, AP
         return String.format("<ul><li>webcalUrl: %s</li><li>date: %s</li><li>events: %s</li></ul>", webcalUrl, date, events);
     }
 
-    private APIGatewayV2ProxyResponseEvent response(String ret, int httpStatusCode, String debug) {
-        APIGatewayV2ProxyResponseEvent response = new APIGatewayV2ProxyResponseEvent();
+    private APIGatewayV2WebSocketResponse response(String ret, int httpStatusCode, String debug) {
+        APIGatewayV2WebSocketResponse response = new APIGatewayV2WebSocketResponse();
         response.setIsBase64Encoded(false);
         response.setStatusCode(httpStatusCode);
         HashMap<String, String> headers = new HashMap<>();

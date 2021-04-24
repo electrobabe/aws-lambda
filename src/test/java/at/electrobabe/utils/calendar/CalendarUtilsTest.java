@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
  * integration test
  */
 public class CalendarUtilsTest {
-    private static final String DATE = "2021-04-15";
+    private static final String DATE = "2021-04-21";
     private static final String PROPERTY_FILE_NAME = "calendarUtilsTest.properties";
 
     private final Properties prop = new Properties();

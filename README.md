@@ -139,15 +139,18 @@ https://console.aws.amazon.com/iam/home#/roles/lambda_basic_execution?section=pe
 -> set in ~/.aws/config (not env var: set AWS_REGION=[AWS_REGION])
 region = [AWS_REGION]
 
-
-- ERROR "User: arn:aws:sts::[LAMBDA_ID]:assumed-role/[FUNCTION_NAME]-role-[ROLE_ID]/[FUNCTION_NAME] is not authorized to perform: lambda:GetAccountSettings on resource: * (Service: Lambda, Status Code: 403, Request ID: dbc74a3c-3ded-491d-bc5d-d44ff78a65f0)"
+- ERROR "User: arn:aws:sts::[LAMBDA_ID]:assumed-role/[FUNCTION_NAME]-role-[ROLE_ID]/[FUNCTION_NAME] is not authorized to perform: lambda:GetAccountSettings on resource: * (Service: Lambda, Status
+  Code: 403, Request ID: dbc74a3c-3ded-491d-bc5d-d44ff78a65f0)"
 
 --> https://stackoverflow.com/questions/37498124/accessdeniedexception-user-is-not-authorized-to-perform-lambdainvokefunction
 
-- ERROR: calling through API gateway, receiving a 502 {"message": "Internal server error"} through URL call
---> check test invocation on AWS: https://[AWS_REGION].console.aws.amazon.com/apigateway/home?region=[AWS_REGION]#/apis/[API_GATEWAY_ID]/resources/[GATEWAY_RESOURCE]/methods/ANY
+- ERROR: calling through API gateway, receiving a 502 {"message": "Internal server error"} through URL call --> check test invocation on AWS: https://[AWS_REGION]
+  .console.aws.amazon.com/apigateway/home?region=[AWS_REGION]#/apis/[API_GATEWAY_ID]/resources/[GATEWAY_RESOURCE]/methods/ANY
+
 + check logs: "Execution failed due to configuration error: Malformed Lambda proxy response. Method completed with status: 502"
--> https://aws.amazon.com/de/premiumsupport/knowledge-center/malformed-502-api-gateway/
+  -> https://aws.amazon.com/de/premiumsupport/knowledge-center/malformed-502-api-gateway/
+
++ set timeout to 90sec
 
 # Housekeeping
 

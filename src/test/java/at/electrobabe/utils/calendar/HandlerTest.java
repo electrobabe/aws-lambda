@@ -4,8 +4,8 @@ import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2ProxyResponseEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class HandlerTest {
     private static final String PROPERTY_FILE_NAME = "calendarUtilsTest.properties";
     private final Properties prop = new Properties();
 
-    private static final String DATE = "2021-04-15";
+    private static final String DATE = "2021-04-21";
 
 
     @Before
@@ -48,12 +48,12 @@ public class HandlerTest {
     public void handleRequest() {
         String webcalUrl = prop.getProperty("WEBCAL_URL", "https://outlook.office365.com/owa/calendar/123/calendar.ics");
 
-        APIGatewayV2ProxyRequestEvent event = new APIGatewayV2ProxyRequestEvent();
+        APIGatewayV2WebSocketEvent event = new APIGatewayV2WebSocketEvent();
         event.setQueryStringParameters(Map.of(PARAM_WEBCAL_URL, webcalUrl, PARAM_DATE, DATE));
         Context context = new TestContext();
 
         Handler handler = new Handler();
-        APIGatewayV2ProxyResponseEvent result = handler.handleRequest(event, context);
+        APIGatewayV2WebSocketResponse result = handler.handleRequest(event, context);
         assertNotNull(result);
     }
 
