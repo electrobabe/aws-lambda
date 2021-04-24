@@ -34,16 +34,17 @@ public class Handler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGa
     private static final LambdaAsyncClient lambdaClient = LambdaAsyncClient.create();
 
     private static final String TEMPLATE = "/index.html";
-    private static final String BODY_PLACEHOLDER = "BODY_PLACEHOLDER";
+    private static final String RESULT_PLACEHOLDER = "RESULT_PLACEHOLDER";
     private static final String DEBUG_PLACEHOLDER = "DEBUG_PLACEHOLDER";
     private static final String HTML_BACKUP = "<!DOCTYPE html>" +
             "<html>\n" +
             "  <head><title>CalenderUtils</title><meta charset=\"UTF-8\"></head>\n" +
             "  <body>\n" +
             "    <h1>CalenderUtils</h1>\n" +
-            "    <h2>Result</h2><p>" + BODY_PLACEHOLDER + "</p>\n" +
+            "    <h2>Result</h2><p>" + RESULT_PLACEHOLDER + "</p>\n" +
             "    <h2>Debug</h2><pre><code>" + DEBUG_PLACEHOLDER + "</code></pre></body>\n" +
             "</html>";
+    private static final String HTML_RESULT_LIST = "<ul><li>webcalUrl: %s</li><li>date: %s</li><li><b>events</b>: %s</li></ul>";
 
     static final String PARAM_WEBCAL_URL = "WEBCAL_URL";
     static final String PARAM_DATE = "DATE";
@@ -106,9 +107,10 @@ public class Handler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGa
             String eventsAsList = CalendarUtils.getCalendarEntriesForDay(date, webcalUrl);
 
             log.debug("eventsAsList: {}", eventsAsList);
-
-            events = Arrays.stream(eventsAsList.split("\n")).map(s -> "<li>" + s + "</li>").collect(Collectors.joining("", "<ol>", "</ol>"));
-            log.debug("formattedEvents {}", events);
+            if (eventsAsList != null) {
+                events = Arrays.stream(eventsAsList.split("\n")).map(s -> "<li>" + s + "</li>").collect(Collectors.joining("", "<ol>", "</ol>"));
+                log.debug("formattedEvents {}", events);
+            }
 
         } catch (Exception e) {
             log.error("error getting events", e);
@@ -119,7 +121,7 @@ public class Handler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGa
         log.info("events {}", events);
 
 
-        return String.format("<ul><li>webcalUrl: %s</li><li>date: %s</li><li>events: %s</li></ul>", webcalUrl, date, events);
+        return String.format(HTML_RESULT_LIST, webcalUrl, date, events);
     }
 
     private APIGatewayV2WebSocketResponse response(String ret, int httpStatusCode, String debug) {
@@ -132,7 +134,7 @@ public class Handler implements RequestHandler<APIGatewayV2WebSocketEvent, APIGa
 
         String template = getHTMLTemplate();
 
-        response.setBody(template.replace(BODY_PLACEHOLDER, ret).replace(DEBUG_PLACEHOLDER, debug));
+        response.setBody(template.replace(RESULT_PLACEHOLDER, ret).replace(DEBUG_PLACEHOLDER, debug));
 
         log.info("response: {}", response);
         return response;

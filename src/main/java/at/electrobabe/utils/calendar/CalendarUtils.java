@@ -122,12 +122,17 @@ public class CalendarUtils {
     }
 
     private static boolean inList(List<VEvent> list, VEvent event) {
-        return list.stream().anyMatch(o -> o.getSummary().getValue().equals(event.getSummary().getValue()));
+        return list.stream().anyMatch(o -> {
+            if (o.getDuration() != null && event.getDuration() != null) {
+                return o.getSummary().getValue().equals(event.getSummary().getValue()) && o.getDuration().getValue().equals(event.getDuration().getValue());
+            } else {
+                return o.getSummary().getValue().equals(event.getSummary().getValue());
+            }
+        });
     }
 
     private static void addOccurrence(String dateStr, List<VEvent> list, Date date, VEvent event) {
         try {
-            log.debug("addOccurrence");
             // fixes: VEvent occurrence = event.getOccurrence(date);
             PeriodList periods = event.getConsumedTime(date, new Date(date.getTime() + ONE_DAY_IN_MILLIS));
             log.debug("periods {}", periods.size());
@@ -166,7 +171,7 @@ public class CalendarUtils {
      */
     private static String printEvent(VEvent event) {
         String outOfOffice = event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS") != null ? event.getProperty("X-MICROSOFT-CDO-BUSYSTATUS").getValue() : "";
-        String text = String.format("%s - %s - (%s)", getDurationAsString(event), event.getSummary().getValue(), outOfOffice);
+        String text = String.format("%s (%s) %s", getDurationAsString(event), outOfOffice, event.getSummary().getValue());
         log.info(text);
 
         return text;
